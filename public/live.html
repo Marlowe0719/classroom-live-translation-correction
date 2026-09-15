@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>课堂实时翻译 · 英语 → 中文</title><link rel="stylesheet" href="/live.css"><script src="/live.js" defer></script><script src="/fullscreen.js" defer></script><script src="/context-correction.js" defer></script><script src="/context-panel.js" defer></script></head>
+<body>
+<main class="live-app">
+  <header class="topbar"><a class="brand" href="/" aria-label="课堂实时翻译首页"><span class="brand-mark">译</span><div><strong>课堂实时翻译</strong><small>英语 → 中文</small></div></a><nav aria-label="其他功能"><a href="/compare#profiles" target="_blank" rel="noopener noreferrer">API 配置</a><a class="secondary-link" href="/compare" target="_blank" rel="noopener noreferrer">对比实验室 ↗</a></nav></header>
+
+  <section class="control-panel" aria-label="字幕控制">
+    <div class="main-controls">
+      <label class="model-field" for="asr-select"><span>语音识别 API</span><select id="asr-select" disabled><option>正在读取配置…</option></select></label>
+      <label class="model-field" for="translation-select"><span>中文翻译 API</span><select id="translation-select" disabled><option>正在读取配置…</option></select></label>
+      <fieldset class="source-field"><legend>声音来源</legend><div class="source-choice"><label><input type="radio" name="source" value="mic" checked><span>麦克风</span></label><label><input type="radio" name="source" value="system"><span>电脑声音</span></label></div></fieldset>
+      <div class="start-actions"><button id="start-button" class="button primary" type="button" disabled><span aria-hidden="true">▶</span> 开始实时翻译</button><button id="stop-button" class="button secondary" type="button" title="暂停采集，可继续翻译，不自动导出" hidden><span aria-hidden="true">Ⅱ</span> 暂停</button><button id="end-button" class="button stop" type="button" title="结束本次课堂并自动导出 TXT" hidden><span aria-hidden="true">■</span> 结束并导出</button></div>
+    </div>
+    <div class="control-meta"><p id="source-help">开始后才会请求麦克风权限。暂停后可切换模型，已有字幕保留。</p><span class="fee-note">所选语音与翻译 API 分别计费</span></div>
+    <details id="settings" class="settings"><summary><span>课堂设置</span><span id="settings-summary">金融通用 · 最长 45 分钟</span><span class="chevron" aria-hidden="true">⌄</span></summary><div class="settings-content">
+      <div class="settings-grid"><label for="finance-course">金融课程<select id="finance-course"><option value="general">金融硕士 · 通用</option><option value="corporate">公司金融</option><option value="asset-pricing">资产定价</option><option value="fixed-income">固定收益</option><option value="derivatives">衍生品</option><option value="portfolio">投资组合</option><option value="econometrics">计量经济学</option><option value="fx">国际金融与外汇</option><option value="none">关闭金融词库</option></select></label><label for="max-minutes">本次时长上限<select id="max-minutes"><option value="10">10 分钟</option><option value="45" selected>45 分钟</option><option value="60">60 分钟</option><option value="90">90 分钟</option><option value="120">120 分钟</option></select></label><div class="settings-refresh"><button id="refresh-profiles" class="button secondary small" type="button">刷新 API 配置</button></div></div>
+      <p id="finance-hint" class="field-help">金融词库会用于所选 API 支持的识别或翻译环节。</p>
+      <div class="hint-fields"><label for="glossary">补充术语 / 人名 <span>可选</span><textarea id="glossary" rows="2" maxlength="3000" placeholder="如：教授姓名、公司名或需要保留的缩写"></textarea></label><label for="context">本节课背景 <span>可选</span><textarea id="context" rows="2" maxlength="3000" placeholder="如：金融硕士固定收益课程，本节讲解久期与凸性"></textarea></label></div>
+      <p class="privacy-note">开始后，音频和必要文本会发至你选择的平台。电脑共享画面保留在本机，密钥保留在本机服务端。关闭页面会停止采集。</p>
+    </div></details>
+  </section>
+
+  <div id="notice" class="notice" role="status" hidden></div>
+  <section id="caption-panel" class="caption-panel" aria-label="实时双语字幕">
+    <header class="caption-toolbar"><div class="session-status" role="status"><span id="status-dot" class="status-dot"></span><div><strong id="status-text">准备就绪</strong><span id="status-detail">选择模型与声音来源，即可开始。</span></div></div><div class="caption-tools"><span id="timer" class="timer">00:00</span><select id="display-language" aria-label="字幕显示语言"><option value="bilingual">英中双语</option><option value="chinese">仅中文</option></select><label class="autoscroll-label"><input id="autoscroll" type="checkbox" checked> 自动滚动</label><button id="font-down" class="icon-button" type="button" title="缩小字幕" aria-label="缩小字幕">A−</button><button id="font-up" class="icon-button" type="button" title="放大字幕" aria-label="放大字幕">A+</button><button id="export-button" class="button secondary small" type="button" disabled>导出 TXT</button><button id="clear-button" class="button secondary small clear-button" type="button" title="清空本页字幕与上下文，保留 API 和课程设置" disabled>清除本页</button></div></header>
+    <div id="transcript" class="transcript" tabindex="0" aria-label="连续课堂字幕"><div id="empty-state" class="empty-state"><div class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><h1>把注意力留给课堂。</h1><p>英文分句显示，中文译文随后跟上。<br>点击上方开始，或先查看已有测试记录。</p><button id="preview-button" class="button secondary" type="button">查看历史字幕预览</button><small>预览不采集声音，不调用 API</small></div><div id="caption-list"></div></div>
+    <footer class="caption-footer"><span id="sentence-count">0 句字幕</span><span id="mode-note">暂停后可继续这堂课，已有字幕保留。</span><span id="export-status" role="status" aria-live="polite">点击结束后自动导出 TXT</span><button id="scroll-bottom" class="text-button" type="button" hidden>回到最新字幕 ↓</button></footer>
+  </section>
+  <footer class="page-footer"><span>暂停后可继续；点击结束后自动导出 TXT 至“下载/课堂字幕”。字幕草稿持续保存。</span><span>实时转录，逐句翻译 · 本机工作台</span></footer>
+</main>
+</body>
+</html>
