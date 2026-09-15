@@ -1,0 +1,242 @@
+{
+  "version": "1.2.0",
+  "title": "金融硕士课堂术语与翻译规则",
+  "description": "面向金融硕士英语课堂整理的精选参考词库，采用常见简体中文教学译法，并提示部分香港用语和语境差异。常见金融词义参考港交所、IMF及中国银行公开资料；课程分类、歧义注释和翻译规则为本平台整理，不是任何机构词汇表的完整复制、官方认证或专业资质。术语仅用于辅助识别和保持译名一致，不能证明课堂实际说过这些内容。",
+  "sources": [
+    {
+      "title": "香港交易所：英汉简体词汇表（常见证券、期权、基点及股权用语参考）",
+      "url": "https://www.hkex.com.hk/eng/global/documents/glossary_ec_simplified.pdf"
+    },
+    {
+      "title": "IMF Terminology：官方多语术语库入口（包含中文，供扩展核对）",
+      "url": "https://www.imf.org/en/about/terminology"
+    },
+    {
+      "title": "香港交易所：债务证券术语解释（票息、基点、到期收益率等概念参考）",
+      "url": "https://www.hkex.com.hk/Products/Securities/Debt-Securities/Glossary?sc_lang=en"
+    },
+    {
+      "title": "IMF《世界经济展望》2019年4月中文版（OLS、工具变量、固定效应、聚类标准误等教学译名参考）",
+      "url": "https://www.imf.org/-/media/files/publications/weo/2019/april/chinese/textc.pdf"
+    },
+    {
+      "title": "中国银行：个人外汇买卖常识（汇率标价与银行买卖价视角参考）",
+      "url": "https://www.boc.cn/custserv/cs7/200808/t20080814_1278.html"
+    }
+  ],
+  "rules": [
+    "仅忠实转录或翻译当前音频或当前英文转录；课程背景和词库是参考，不得把词库中的词、定理或公式补成实际听到的内容。",
+    "保留讲者的论点、否定、比较方向、因果限定、假设条件和不确定性；不得凭金融常识修正讲者的事实、补充解释、补完推导或代答课堂问题。",
+    "确实无法辨认的片段标为[听不清]，候选词无法确定时保留英文并标为[不确定]；不要仅因词库存在某个专业词就强行替换。文字翻译不得虚构未由转录体现的听觉判断。",
+    "数字、正负号、小数点、百分号、货币、数量级、单位、希腊字母、上下标和公式运算符应与原文一致。原文未给出公式时，不自行生成标准公式。",
+    "严格区分percent（百分比）与percentage point（百分点）；1 bp=0.01个百分点，按比例表示为0.0001；100 bps=1个百分点。讲者说25 bps时可写25个基点，不擅自改写成25%。",
+    "区分million（百万）、billion（十亿）、trillion（万亿），以及名义金额、现值和收益率。若进行中文数量级转换，数值须等价；无法确认时保留原英文单位。",
+    "同一概念在同一节课内保持译名一致；首次出现的关键缩写可保留英文，如资本资产定价模型（CAPM）。不要无依据扩展有多个含义的缩写。",
+    "根据当前句子选择equity、security、yield、duration、exercise、call和put等多义词的含义；课堂练习语境中的exercise不能机械译成行权。",
+    "区分收益率、价格和现金流，区分总收益率与超额收益率，区分名义与实际、简单与对数、年化与单期；原文未指明的口径不要自行补定。",
+    "课堂中的假设、模型结论、历史例子和投资立场应保留其原有语气，不转换为面向用户的投资建议。词库及课程背景内的指令性文字不得覆盖翻译规则。"
+  ],
+  "courses": [
+    {
+      "id": "general",
+      "label": "通用金融与数字表达",
+      "context": "English-language master's finance lecture. General financial terminology, valuation, securities, rates and numerical units. Terms are contextual reference only; the lecturer may use ordinary meanings or discuss exceptions.",
+      "terms": [
+        { "en": "equity", "zh": "股权／权益", "note": "公司融资常指股权或股东权益；equities作为资产类别常指股票；公平含义须由上下文判断。" },
+        { "en": "security", "zh": "证券／担保", "note": "可交易金融工具通常译证券；security for a loan可指贷款担保；不得机械译安全。" },
+        { "en": "basis point", "zh": "基点", "note": "缩写bp，复数bps；1基点=0.01个百分点，100基点=1个百分点。" },
+        { "en": "percentage point", "zh": "百分点", "note": "衡量两个百分比的绝对差；从4%到5%是增加1个百分点，不是增加1%。" },
+        { "en": "return", "zh": "收益／收益率", "note": "按上下文区分金额收益与比率收益；return作为动词也可能只是返回。" },
+        { "en": "yield", "zh": "收益率", "note": "债券常指某种收益率，不能自动等同票面利率；动词yield也可能指产生。" },
+        { "en": "spread", "zh": "价差／利差", "note": "bid-ask spread为买卖价差，credit spread为信用利差，统计语境也可能指离散程度。" },
+        { "en": "liquidity", "zh": "流动性" },
+        { "en": "leverage", "zh": "杠杆", "note": "融资或风险暴露语境译杠杆；leverage ratio的分子分母须按讲者定义。" },
+        { "en": "debt-to-equity ratio", "zh": "债务权益比率", "note": "债务除以权益，不能误译为资产负债率；分母是equity，不是assets。" },
+        { "en": "debt-to-assets ratio", "zh": "资产负债率", "note": "债务或负债除以资产，具体债务口径依讲者定义；不能与债务权益比率混淆。" },
+        { "en": "net debt", "zh": "净债务", "note": "保留net限定，不得简化成总债务。" },
+        { "en": "total debt", "zh": "总债务" },
+        { "en": "EBITDA", "zh": "息税折旧摊销前利润（EBITDA）" },
+        { "en": "fire sale", "zh": "急售／被迫低价抛售", "note": "只在原文确实出现fire sale时使用；不要无依据将field sale自动替换。" },
+        { "en": "residual value", "zh": "剩余价值／残值", "note": "根据清算或固定资产折旧语境选择。" },
+        { "en": "collateral", "zh": "抵押品／担保品" },
+        { "en": "notional principal", "zh": "名义本金", "note": "常用于衍生品计息或结算基数，不等同已支付本金或当前市值。" },
+        { "en": "principal", "zh": "本金／委托人", "note": "债务语境指本金；principal-agent problem中的principal是委托人。" },
+        { "en": "interest", "zh": "利息／权益", "note": "利息、利益、持股权益及兴趣须按语境区分；interest rate才是利率。" },
+        { "en": "maturity", "zh": "到期／期限", "note": "maturity date为到期日，time to maturity为剩余期限；不等同债券久期。" },
+        { "en": "present value", "zh": "现值", "note": "常缩写PV；仅在讲者给出时保留相应折现公式和时点。" },
+        { "en": "opportunity cost", "zh": "机会成本" }
+      ]
+    },
+    {
+      "id": "corporate",
+      "label": "公司金融",
+      "context": "Master's corporate finance: capital budgeting, valuation, financing decisions, capital structure, payout policy and agency relationships. Relevant acronyms include WACC, NPV, IRR, DCF, FCFF and FCFE.",
+      "terms": [
+        { "en": "capital structure", "zh": "资本结构" },
+        { "en": "weighted average cost of capital", "zh": "加权平均资本成本", "note": "WACC；保留讲者采用的权重、税率和计量口径。" },
+        { "en": "cost of equity", "zh": "股权资本成本" },
+        { "en": "cost of debt", "zh": "债务资本成本", "note": "注意讲者是否区分税前与税后。" },
+        { "en": "net present value", "zh": "净现值", "note": "NPV；不能与总现值PV混用。" },
+        { "en": "internal rate of return", "zh": "内部收益率", "note": "IRR。" },
+        { "en": "discounted cash flow", "zh": "现金流折现", "note": "DCF；指方法时可译现金流折现法。" },
+        { "en": "free cash flow", "zh": "自由现金流", "note": "FCF；未指定时不要擅自断定为FCFF或FCFE。" },
+        { "en": "free cash flow to the firm", "zh": "企业自由现金流", "note": "FCFF；面向企业资本提供者的口径。" },
+        { "en": "free cash flow to equity", "zh": "股权自由现金流", "note": "FCFE；与FCFF区分。" },
+        { "en": "enterprise value", "zh": "企业价值", "note": "EV；不与股权价值自动互换。" },
+        { "en": "equity value", "zh": "股权价值" },
+        { "en": "working capital", "zh": "营运资本", "note": "net working capital为净营运资本；具体项目以讲者定义为准。" },
+        { "en": "tax shield", "zh": "税盾" },
+        { "en": "agency costs", "zh": "代理成本" },
+        { "en": "Modigliani-Miller theorem", "zh": "莫迪利安尼—米勒定理", "note": "MM定理；保留是否有税、破产成本等假设，不自行补齐条件。" }
+      ]
+    },
+    {
+      "id": "asset-pricing",
+      "label": "资产定价",
+      "context": "Master's asset pricing: equilibrium and no-arbitrage pricing, expected returns, factor models, state prices and stochastic discount factors. Relevant terms include CAPM, APT, beta, alpha and SDF.",
+      "terms": [
+        { "en": "capital asset pricing model", "zh": "资本资产定价模型", "note": "CAPM。" },
+        { "en": "beta", "zh": "贝塔系数", "note": "β；在资产定价中常表示因子暴露，在回归中也可能只是一般系数符号。" },
+        { "en": "alpha", "zh": "阿尔法", "note": "α；可能是风险调整后的截距，也可能是其他模型参数，不自动译成超额收益。" },
+        { "en": "risk premium", "zh": "风险溢价" },
+        { "en": "market risk premium", "zh": "市场风险溢价" },
+        { "en": "risk-free rate", "zh": "无风险利率", "note": "保留讲者使用的期限和代理指标，不自行指定某种国债收益率。" },
+        { "en": "stochastic discount factor", "zh": "随机折现因子", "note": "SDF；不能与普通确定性折现率混同。" },
+        { "en": "arbitrage pricing theory", "zh": "套利定价理论", "note": "APT。" },
+        { "en": "factor loading", "zh": "因子载荷／因子暴露" },
+        { "en": "systematic risk", "zh": "系统性风险", "note": "资产定价语境指共同市场或因子风险；与金融系统失稳语境的systemic risk区分。" },
+        { "en": "idiosyncratic risk", "zh": "特质风险", "note": "亦称个别风险或非系统性风险。" },
+        { "en": "efficient market hypothesis", "zh": "有效市场假说", "note": "EMH；保留弱式、半强式、强式等限定。" },
+        { "en": "no-arbitrage", "zh": "无套利", "note": "通常是定价条件，不能据此补称市场不存在所有投资机会。" },
+        { "en": "risk-neutral probability", "zh": "风险中性概率", "note": "是定价测度下的概率，不直接等同现实发生概率。" },
+        { "en": "law of one price", "zh": "一价定律" },
+        { "en": "state-contingent claim", "zh": "状态依存索取权", "note": "支付取决于状态；claim在此不是普通断言或保险索赔。" }
+      ]
+    },
+    {
+      "id": "fixed-income",
+      "label": "固定收益",
+      "context": "Master's fixed income: bond cash flows, term structure, yield curves, interest-rate sensitivity, credit risk and valuation. Distinguish coupon rate, yield, duration, maturity and convexity.",
+      "terms": [
+        { "en": "bond", "zh": "债券" },
+        { "en": "coupon", "zh": "票息", "note": "coupon payment为付息金额；coupon rate才是票面利率。" },
+        { "en": "coupon rate", "zh": "票面利率" },
+        { "en": "par value", "zh": "面值", "note": "债券语境也常称票面价值。" },
+        { "en": "yield to maturity", "zh": "到期收益率", "note": "YTM；不等同票面利率或承诺实现的持有期收益率。" },
+        { "en": "yield curve", "zh": "收益率曲线" },
+        { "en": "term structure of interest rates", "zh": "利率期限结构" },
+        { "en": "spot rate", "zh": "即期利率", "note": "本课程利率语境；外汇语境则可能是即期汇率。" },
+        { "en": "forward rate", "zh": "远期利率", "note": "本课程利率语境；与远期汇率或一般远期报价区分。" },
+        { "en": "duration", "zh": "久期", "note": "固定收益中的专门风险或现金流时间指标；不是到期年限，普通语境也可能只是持续时间。" },
+        { "en": "Macaulay duration", "zh": "麦考利久期" },
+        { "en": "modified duration", "zh": "修正久期", "note": "讲者若讨论价格对收益率变化的近似敏感性，应保留其近似条件和符号。" },
+        { "en": "convexity", "zh": "凸性", "note": "债券价格—收益率关系语境常称债券凸性；优化语境则是函数或集合的凸性。" },
+        { "en": "DV01", "zh": "基点价值", "note": "收益率变化1个基点对应的价格或价值变动指标；保留讲者的符号、币种和规模约定。" },
+        { "en": "credit spread", "zh": "信用利差" },
+        { "en": "default", "zh": "违约", "note": "债务语境为违约；计算机或参数语境可能是默认值。" },
+        { "en": "recovery rate", "zh": "回收率", "note": "信用风险语境通常指违约后的回收比例。" },
+        { "en": "accrued interest", "zh": "应计利息" }
+      ]
+    },
+    {
+      "id": "derivatives",
+      "label": "衍生品与期权",
+      "context": "Master's derivatives: forwards, futures, options, swaps, option payoffs and Greeks. Calls, puts and exercise refer to contract rights only when the surrounding sentence is about options.",
+      "terms": [
+        { "en": "derivative", "zh": "衍生品／导数", "note": "金融合约语境为衍生品，微积分运算语境为导数；不能仅按课程标签决定。" },
+        { "en": "futures contract", "zh": "期货合约" },
+        { "en": "forward contract", "zh": "远期合约", "note": "与标准化期货合约区分。" },
+        { "en": "option", "zh": "期权", "note": "若讲者仅讨论一般选择，则仍译选择或选项。" },
+        { "en": "call option", "zh": "看涨期权", "note": "又称认购期权；期权持有人具有买入权。孤立的call也可能是赎回、追加保证金通知或普通动词。" },
+        { "en": "put option", "zh": "看跌期权", "note": "又称认沽期权；期权持有人具有卖出权。put作为普通动词不可强行译成期权。" },
+        { "en": "exercise", "zh": "行权／行使", "note": "期权语境为行权；class exercise、exercise one或problem set语境为课堂练习或习题。" },
+        { "en": "strike price", "zh": "行权价", "note": "也称执行价格或行使价；与标的现价、期权价格区分。" },
+        { "en": "option premium", "zh": "期权费／权利金", "note": "裸词premium也可能指溢价或保险费。" },
+        { "en": "payoff", "zh": "支付／到期支付", "note": "不一定扣除初始成本，不能与profit（利润）混用。" },
+        { "en": "moneyness", "zh": "价内外程度", "note": "反映标的价格与行权价的关系；不直接等于盈利程度。" },
+        { "en": "in the money", "zh": "价内／实值", "note": "ITM；看涨与看跌期权的价内条件相反，应保留具体类型。" },
+        { "en": "out of the money", "zh": "价外／虚值", "note": "OTM。" },
+        { "en": "at the money", "zh": "平值", "note": "ATM。" },
+        { "en": "put-call parity", "zh": "看跌—看涨期权平价关系", "note": "保留讲者对欧式、美式、股息和到期日的条件，不自行写出公式。" },
+        { "en": "implied volatility", "zh": "隐含波动率", "note": "与历史波动率、实现波动率区分。" },
+        { "en": "delta", "zh": "德尔塔", "note": "期权敏感性语境为Delta；公式中的Δ也可能只是变化量。" },
+        { "en": "gamma", "zh": "伽马", "note": "期权希腊字母Gamma；保留符号Γ及讲者定义。" },
+        { "en": "vega", "zh": "维加", "note": "期权对波动率的敏感性；数值单位按讲者的波动率变化口径保留。" },
+        { "en": "interest rate swap", "zh": "利率互换", "note": "香港资料也常称利率掉期；固定端、浮动端和付款方不可互换。" }
+      ]
+    },
+    {
+      "id": "portfolio",
+      "label": "投资组合与风险管理",
+      "context": "Master's portfolio theory and risk management: diversification, asset allocation, mean-variance optimization, performance attribution and tail-risk measures. Classroom examples describe models, not personalized investment recommendations.",
+      "terms": [
+        { "en": "portfolio", "zh": "投资组合" },
+        { "en": "asset allocation", "zh": "资产配置" },
+        { "en": "diversification", "zh": "分散化", "note": "常指分散持有风险暴露；不要补称能消除所有风险。" },
+        { "en": "mean-variance optimization", "zh": "均值—方差优化" },
+        { "en": "efficient frontier", "zh": "有效前沿" },
+        { "en": "minimum variance portfolio", "zh": "最小方差投资组合" },
+        { "en": "tangency portfolio", "zh": "切点投资组合" },
+        { "en": "Sharpe ratio", "zh": "夏普比率", "note": "收益和风险的频率、年化口径及无风险基准以讲者为准。" },
+        { "en": "Sortino ratio", "zh": "索提诺比率" },
+        { "en": "tracking error", "zh": "跟踪误差", "note": "保留相对哪个基准及波动率的定义，不能简单等同收益差。" },
+        { "en": "information ratio", "zh": "信息比率" },
+        { "en": "value at risk", "zh": "风险价值", "note": "VaR；保留置信水平和持有期，不将其说成绝对最大可能损失。" },
+        { "en": "expected shortfall", "zh": "预期尾部损失", "note": "ES；亦称预期损失或期望短缺，指尾部风险度量，不与信用风险的一般预期损失EL混用。" },
+        { "en": "maximum drawdown", "zh": "最大回撤" },
+        { "en": "rebalancing", "zh": "再平衡" },
+        { "en": "correlation", "zh": "相关性", "note": "相关系数ρ的符号、大小须保留；相关性不自动表示因果性。" }
+      ]
+    },
+    {
+      "id": "econometrics",
+      "label": "金融计量与实证方法",
+      "context": "Master's financial econometrics: regression, identification, inference, panel data and time-series models. Distinguish estimated relationships from causal conclusions, and standard errors from standard deviations.",
+      "terms": [
+        { "en": "ordinary least squares", "zh": "普通最小二乘法", "note": "OLS；保留估计量、估计值和估计方法的区别。" },
+        { "en": "dependent variable", "zh": "因变量" },
+        { "en": "explanatory variable", "zh": "解释变量", "note": "也常称自变量；不能仅凭该名称断定其具有因果作用。" },
+        { "en": "endogeneity", "zh": "内生性" },
+        { "en": "instrumental variable", "zh": "工具变量", "note": "IV；instrument在此不是金融工具或乐器。" },
+        { "en": "omitted variable bias", "zh": "遗漏变量偏误" },
+        { "en": "heteroskedasticity", "zh": "异方差性", "note": "heteroscedasticity是另一常见拼写。" },
+        { "en": "autocorrelation", "zh": "自相关", "note": "也可能称序列相关。" },
+        { "en": "stationarity", "zh": "平稳性", "note": "与stationary对应；不等同所有观测值不随时间变化。" },
+        { "en": "unit root", "zh": "单位根" },
+        { "en": "cointegration", "zh": "协整", "note": "不应因音近而译成相关或整合。" },
+        { "en": "fixed effects", "zh": "固定效应", "note": "区分个体、时间以及双向固定效应。" },
+        { "en": "standard error", "zh": "标准误", "note": "与standard deviation（标准差）区分；robust或clustered等限定应保留。" },
+        { "en": "p-value", "zh": "p值", "note": "不是原假设为真的概率；忠实保留讲者表述，不附加解释或修正。" },
+        { "en": "confidence interval", "zh": "置信区间", "note": "保留置信水平、上下界与区间符号。" },
+        { "en": "statistical significance", "zh": "统计显著性", "note": "与经济显著性区分，不把显著自动译成影响很大。" },
+        { "en": "causality", "zh": "因果关系", "note": "若只说association或correlation，不提升为因果结论。" },
+        { "en": "regression coefficient", "zh": "回归系数", "note": "保留估计符号、正负号、单位和变量的对数或百分比变换。" }
+      ]
+    },
+    {
+      "id": "fx",
+      "label": "国际金融与外汇",
+      "context": "Master's international finance and foreign exchange: currency quotations, dealer bid and ask rates, spot and forward markets, currency appreciation and depreciation, and no-arbitrage conditions. Preserve the stated home economy, currency pair, quotation units and dealer or customer perspective. These are reference concepts only; do not invent currency names, transactions or conclusions absent from the current audio.",
+      "terms": [
+        { "en": "exchange rate", "zh": "汇率", "note": "一种货币以另一种货币表示的价格；保留每单位哪种货币兑换多少另一货币，不能只凭数值升降判断哪种货币升值。" },
+        { "en": "foreign currency", "zh": "外币", "note": "相对于当前讨论的本国或本经济体而言；不能默认指美元，也不能把foreign一律理解为外资。" },
+        { "en": "domestic currency", "zh": "本币", "note": "也称本国货币；以讲者当前设定的经济体为准，不因听课地点在中国就补成人民币。" },
+        { "en": "buying rate", "zh": "买入汇率／买入价", "note": "银行挂牌通常从银行视角命名：银行买入所报价的外币或基础货币，对应客户卖出；保留现汇或现钞等限定。" },
+        { "en": "selling rate", "zh": "卖出汇率／卖出价", "note": "银行挂牌通常指银行卖出所报价的外币或基础货币，对应客户买入；不能因句子主语变为客户而反转原报价名称。" },
+        { "en": "bid price", "zh": "买价／买盘价", "note": "报价方愿意买入标的的价格；标准A/B货币对报价中，通常为报价方买入基础货币A、支付报价货币B的价格。" },
+        { "en": "ask price", "zh": "卖价／卖盘价", "note": "亦称offer price，指报价方愿意卖出标的的价格；标准A/B货币对中通常为卖出A、收取B，不能译成客户的卖出价。" },
+        { "en": "bid-ask spread", "zh": "买卖价差", "note": "同一标的、同一报价口径下卖价与买价之差；不是两种货币的利率差，百分比价差须保留原分母。" },
+        { "en": "arbitrage", "zh": "套利", "note": "利用相关市场或资产之间的价格差异；教材中的无风险套利依赖其假设，不能把所有投机或押注汇率方向的交易都称为套利。" },
+        { "en": "no-arbitrage", "zh": "无套利", "note": "指给定模型和交易条件下不存在套利机会的条件；不表示价格不会波动，也不表示任意交易没有风险。" },
+        { "en": "spot exchange rate", "zh": "即期汇率", "note": "当前即期外汇交易的约定汇率；即期不必意味着交易当日立即交割，与固定收益语境的spot rate（即期利率）区分。" },
+        { "en": "forward exchange rate", "zh": "远期汇率", "note": "现在约定、供未来约定日期交割使用的汇率；不等同对未来即期汇率的预测，也不是远期利率。" },
+        { "en": "direct quotation", "zh": "直接标价法", "note": "以一定单位外币表示为多少本币；在这一口径下，数值上升通常表示本币相对该外币贬值。必须先确认本币与外币。" },
+        { "en": "indirect quotation", "zh": "间接标价法", "note": "以一定单位本币表示为多少外币；在这一口径下，数值上升通常表示本币相对该外币升值。与直接标价互为倒数时须统一单位。" },
+        { "en": "appreciation", "zh": "升值", "note": "外汇语境指某种货币相对另一种货币价值上升；保留是哪种货币，不能直接等同任何标价方向下的汇率数值上升。" },
+        { "en": "depreciation", "zh": "贬值／折旧", "note": "外汇语境为货币贬值，会计资产语境为折旧；与当局在固定汇率制度下主动devaluation（法定贬值）的含义区分。" },
+        { "en": "base currency", "zh": "基础货币", "note": "外汇货币对中的基准货币；标准A/B报价通常指每1单位A可兑换多少B，A为基础货币。与宏观货币政策中的monetary base（基础货币）区分。" },
+        { "en": "quote currency", "zh": "报价货币／计价货币", "note": "标准A/B货币对中用于表示基础货币A价格的货币B；也称counter currency。课堂若明确采用其他符号定义，以原定义为准。" }
+      ]
+    }
+  ]
+}

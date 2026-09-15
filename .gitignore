@@ -1,0 +1,16 @@
+*.log
+.env*
+profiles.json
+history/
+snapshots/
+node_modules/
+.startup-logs/
+original-preservation.json
+live-draft*.json
+*-credentials.json
+test-assets/*.json
+test-assets/*.wav
+*.pem
+*.key
+*.pfx
+*.p12
