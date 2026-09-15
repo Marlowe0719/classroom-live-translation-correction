@@ -1,10 +1,10 @@
 # 金融课堂实时翻译平台
 
-实时翻译首页：**http://127.0.0.1:8766**。双击 `启动实时翻译.cmd` 可重新启动。
+实时翻译首页：**[http://127.0.0.1:8766](http://127.0.0.1:8766)**。双击 `启动实时翻译.cmd` 可重新启动。
 
-同音频对比保留在 **http://127.0.0.1:8766/compare**；API管理可直接打开 **http://127.0.0.1:8766/compare#profiles**。既有密钥和历史记录沿用。
+同音频对比保留在 **[http://127.0.0.1:8766/compare](http://127.0.0.1:8766/compare)**；API管理可直接打开 **[http://127.0.0.1:8766/compare#profiles](http://127.0.0.1:8766/compare#profiles)**。既有密钥和历史记录沿用。
 
-本项目的 Qwen / DeepSeek 功能可以独立运行。原电脑的 **http://127.0.0.1:8765** 和 `classroom-translator/` 是可选的旧版工具，不包含在此仓库中。
+本项目的 Qwen / DeepSeek 功能可以独立运行。原电脑的 **[http://127.0.0.1:8765](http://127.0.0.1:8765)** 和 `classroom-translator/` 是可选的旧版工具，不包含在此仓库中。
 
 ## 首次安装与启动
 
@@ -17,7 +17,7 @@ npm start
 
 也可以用 `pnpm install --frozen-lockfile` 安装仓库锁定的依赖，然后执行 `node server.mjs`。Windows 安装好依赖后，可双击 `启动实时翻译.cmd`；启动器会等待服务就绪再打开页面，启动失败时显示提示和日志。
 
-打开 **http://127.0.0.1:8766**，进入“API 配置”填写自己的服务地址、模型和 API Key。仓库不含任何密钥、课堂录音、字幕草稿或个人历史记录。离线测试运行 `npm test`，不会调用云端模型。
+打开 **[http://127.0.0.1:8766](http://127.0.0.1:8766)**，进入“API 配置”填写自己的服务地址、模型和 API Key。仓库不含任何密钥、课堂录音、字幕草稿或个人历史记录。离线测试运行 `npm test`，不会调用云端模型。
 
 腾讯兼容入口需要原电脑的 `~/.config/classroom-translator/tencent-credentials.json`；旧版“历史测试示例”需要相邻目录中的 `classroom-translator/test-result.json`。这些可选文件缺失时，不影响 Qwen / DeepSeek 的使用。不要将凭证文件上传到 GitHub。
 
