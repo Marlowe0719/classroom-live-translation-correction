@@ -255,41 +255,38 @@
     }
 
     function snapshotContext() {
-      const none = { text: '', hasCorrections: false };
-      if (disposed || !correctionSwitch.checked || !scheduler || !appliedCorrectionSettings) return none;
-      const settings = { profileId: correctionModel.value, ...correctionSettings() };
-      if (Object.keys(settings).some(key => settings[key] !== appliedCorrectionSettings[key])) return none;
+      const mode = ['bilingual', 'chinese', 'english'].includes(language.value) ? language.value : 'bilingual';
+      const none = { text: '', hasCorrections: false, language: mode };
+      if (disposed) return none;
+      const settings = correctionSwitch.checked && scheduler && appliedCorrectionSettings && mode !== 'english'
+        ? { profileId: correctionModel.value, ...correctionSettings() } : null;
+      const canUseCorrections = settings && Object.keys(settings).every(key => settings[key] === appliedCorrectionSettings[key]);
       let hasCorrections = false;
       // Read the latest DOM even before its observer callback; do not update the
       // scheduler, consume mutations, render, scroll or start any correction work.
       const text = collectViews(true).map(view => {
         const paragraphs = view.paragraphs.map((paragraph, index) => {
-          const cached = candidateCache.get(paragraph.key);
-          const matches = paragraph.complete && cached?.complete && cached.source === paragraph.source
+          const cached = canUseCorrections ? candidateCache.get(paragraph.key) : null;
+          const matches = canUseCorrections && paragraph.complete && cached?.complete && cached.source === paragraph.source
             && cached.target === paragraph.target
             && cached.previousSource === (view.paragraphs[index - 1]?.source.slice(-8000) || '')
             && cached.nextSource === (view.paragraphs[index + 1]?.source.slice(0, 8000) || '');
           const result = matches ? scheduler.getResult(paragraph.key) : null;
-          const corrected = result?.profileId === settings.profileId && typeof result.corrected === 'string'
+          const corrected = result && result.profileId === settings.profileId && typeof result.corrected === 'string'
             && result.corrected.trim() ? result.corrected : '';
           if (corrected) hasCorrections = true;
-          return [paragraph.source, corrected || paragraph.target].filter(Boolean).join('\n\n');
-        });
-        return [view.heading, ...paragraphs].join('\n\n');
-      }).join('\n\n────────\n\n');
-      return hasCorrections ? { text, hasCorrections } : none;
+          return [mode !== 'chinese' ? paragraph.source : '', mode !== 'english' ? corrected || paragraph.target : '']
+            .filter(Boolean).join('\n\n');
+        }).filter(Boolean);
+        return paragraphs.length ? [view.heading, ...paragraphs].join('\n\n') : '';
+      }).filter(Boolean).join('\n\n────────\n\n');
+      return { text, hasCorrections, language: mode };
     }
     const contextExport = { snapshot: snapshotContext };
     window.ClassroomContextExport = contextExport;
 
     function copyText() {
-      const mode = language.value;
-      return views.map(view => {
-        const paragraphs = view.paragraphs.map(paragraph => [
-          mode !== 'chinese' ? paragraph.source : '', mode !== 'english' ? correctedParagraph(paragraph)?.corrected || paragraph.target : '',
-        ].filter(Boolean).join('\n\n')).filter(Boolean);
-        return paragraphs.length ? [view.heading, ...paragraphs].join('\n\n') : '';
-      }).filter(Boolean).join('\n\n────────\n\n');
+      return snapshotContext().text;
     }
 
     function refresh(forceBottom = false) {
@@ -343,7 +340,9 @@
       for (const key of sessionElements.keys()) if (!currentKeys.has(key)) sessionElements.delete(key);
       const total = views.reduce((sum, view) => sum + view.rows.length, 0);
       count.textContent = `${total} 句已定稿`;
-      empty.hidden = total > 0; copy.disabled = !copyText();
+      empty.hidden = total > 0;
+      copy.disabled = !views.some(view => view.paragraphs.some(paragraph =>
+        language.value !== 'chinese' && paragraph.source || language.value !== 'english' && paragraph.target));
       updateCorrectionStatus();
       scroller.scrollTop = follow ? scroller.scrollHeight : top;
     }
@@ -438,9 +437,8 @@
       if (window.ClassroomContextExport === contextExport) delete window.ClassroomContextExport;
     });
     copy.addEventListener('click', async () => {
-      const text = copyText(); if (!text) return;
+      const { text, hasCorrections: usesCorrection } = snapshotContext(); if (!text) return;
       const generation = classroomGeneration;
-      const usesCorrection = language.value !== 'english' && views.some(view => view.paragraphs.some(paragraph => correctedParagraph(paragraph)));
       try {
         if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
         await navigator.clipboard.writeText(text);

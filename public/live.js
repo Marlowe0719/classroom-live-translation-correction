@@ -404,7 +404,9 @@ async function startRun() {
     if (run.stopping || run.finished) { releaseCapture(run); return; }
     if (!run.stream.getAudioTracks().length) throw new Error('此次共享没有声音。请重新开始，选择标签页或整个屏幕，并勾选“共享音频 / 系统音频”。');
     for (const track of run.stream.getTracks()) track.addEventListener('ended', () => { if (state.run === run) void stopRun(run, { message: '声音来源已关闭，本次采集与连接已结束。' }); }, { once: true });
-    run.context = new AudioContext({ latencyHint: 'interactive' }); await run.context.audioWorklet.addModule('/pcm-worklet.js');
+    run.context = new AudioContext({ latencyHint: 'interactive' });
+    try { await run.context.audioWorklet.addModule('/pcm-worklet.js'); }
+    catch (error) { throw new Error('本机课堂服务或音频模块连接中断，请双击桌面“课堂实时翻译”，再回本页重试；已有字幕保留', { cause: error }); }
     if (run.stopping || run.finished) { releaseCapture(run); return; }
     // Only audio tracks enter this graph. A display-sharing video track stays local.
     run.sourceNode = run.context.createMediaStreamSource(new MediaStream(run.stream.getAudioTracks()));
@@ -458,19 +460,31 @@ async function previewHistory() {
   } catch (error) { showNotice(explain(error), true); }
   finally { state.previewing = false; refreshControls(); }
 }
-function captionText({ endedAt = new Date(), includeContext = false } = {}) {
-  const lines = ['课堂实时字幕 · 英语 → 中文', `导出时间：${endedAt.toLocaleString('zh-CN')}`, ''];
-  for (const session of state.sessions) {
-    lines.push(`=== ${session.createdAt.toLocaleString('zh-CN')} · ${session.asrLabel} → ${session.translationLabel}${session.historical ? ' · 历史预览（非实时）' : ''} ===`, '');
-    for (const row of session.rows) lines.push(`[${formatTime(row.seconds)}]${row.final ? '' : '（英文未定稿）'}`, row.source, row.target || '（未收到中文译文）', '');
-  }
-  if (includeContext) {
-    try {
-      const snapshot = window.ClassroomContextExport?.snapshot();
-      if (snapshot?.hasCorrections && snapshot.text) lines.push('=== 上下文（含已完成 AI 校正） ===', '以下保留上下文整合版本；逐句原文与原译文见上方。', '', snapshot.text, '');
-    } catch { /* A sidebar failure must not prevent the original captions from being saved. */ }
-  }
-  return lines.join('\r\n');
+function fallbackContextSnapshot() {
+  const selected = document.getElementById('classroom-context')?.getAttribute?.('data-language') || ui['display-language'].value;
+  const language = ['chinese', 'english'].includes(selected) ? selected : 'bilingual';
+  const clean = value => String(value || '').replace(/\s+/g, ' ').trim();
+  const text = state.sessions.map(session => {
+    const rows = session.rows.filter(row => row.final);
+    const source = language === 'chinese' ? '' : rows.map(row => clean(row.source)).filter(Boolean).join(' ');
+    const target = language === 'english' ? '' : rows.map(row => clean(row.target)).filter(Boolean).join(' ');
+    if (!source && !target) return '';
+    const heading = `${session.createdAt.toLocaleString('zh-CN')} · ${session.asrLabel} → ${session.translationLabel}${session.historical ? ' · 历史预览（非实时）' : ''}`;
+    return [heading, source, target].filter(Boolean).join('\n\n');
+  }).filter(Boolean).join('\n\n────────\n\n');
+  return { text, language, hasCorrections: false };
+}
+function captionText({ endedAt = new Date() } = {}) {
+  let snapshot;
+  try { snapshot = window.ClassroomContextExport?.snapshot(); }
+  catch { /* Preserve finalized text if the sidebar component is unavailable. */ }
+  if (typeof snapshot?.text !== 'string') snapshot = fallbackContextSnapshot();
+  if (!snapshot.text.trim()) return '';
+  const language = { bilingual: '英中双语', chinese: '仅中文', english: '仅英文' }[snapshot.language] || '英中双语';
+  const lines = ['课堂上下文整合文本', `导出时间：${endedAt.toLocaleString('zh-CN')}`, `导出语言：${language}`];
+  if (snapshot.hasCorrections) lines.push('已包含当前有效的 AI 校正译文；其余段落保留原译文。');
+  lines.push('', snapshot.text, '');
+  return lines.join('\n').replace(/\r?\n/g, '\r\n');
 }
 function downloadCaptionText(text, endedAt = new Date()) {
   const url = URL.createObjectURL(new Blob(['\uFEFF', text], { type: 'text/plain;charset=utf-8' }));
@@ -484,17 +498,20 @@ function exportFeedback(sequence, text, detail = '', error = false) {
 function exportCaptions() {
   if (state.clearing || !state.rows.size) return;
   const sequence = ++exportSequence;
-  downloadCaptionText(captionText());
-  exportFeedback(sequence, '已发起 TXT 下载，请查看下载列表');
+  const text = captionText();
+  if (!text) { exportFeedback(sequence, '当前语言暂无已定稿的上下文可导出'); return; }
+  downloadCaptionText(text);
+  exportFeedback(sequence, '已发起上下文 TXT 下载，请查看下载列表');
 }
 async function autoExportCaptions(run) {
   if (run.stopMode === 'pause' || run.exportStarted) return;
   const rows = run.explicitEnd ? [...state.rows.values()] : run.session?.rows || [];
-  if (!rows.some(row => row.source?.trim() || row.target?.trim())) return;
+  if (!rows.some(row => row.final && (row.source?.trim() || row.target?.trim()))) return;
   run.exportStarted = true;
   const sequence = ++exportSequence, endedAt = new Date();
-  const text = captionText({ endedAt, includeContext: true });
-  exportFeedback(sequence, '正在自动保存 TXT…');
+  const text = captionText({ endedAt });
+  if (!text) { exportFeedback(sequence, '当前语言暂无已定稿的上下文可导出'); return; }
+  exportFeedback(sequence, '正在自动保存上下文 TXT…');
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
   try {

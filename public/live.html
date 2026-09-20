@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>课堂实时翻译 · 英语 → 中文</title><link rel="stylesheet" href="/live.css"><script src="/live.js" defer></script><script src="/fullscreen.js" defer></script><script src="/context-correction.js" defer></script><script src="/context-panel.js" defer></script></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>课堂实时翻译矫正 · 英语 → 中文</title><link rel="stylesheet" href="/live.css"><script src="/live.js" defer></script><script src="/fullscreen.js" defer></script><script src="/context-correction.js" defer></script><script src="/context-panel.js" defer></script></head>
 <body>
 <main class="live-app">
-  <header class="topbar"><a class="brand" href="/" aria-label="课堂实时翻译首页"><span class="brand-mark">译</span><div><strong>课堂实时翻译</strong><small>英语 → 中文</small></div></a><nav aria-label="其他功能"><a href="/compare#profiles" target="_blank" rel="noopener noreferrer">API 配置</a><a class="secondary-link" href="/compare" target="_blank" rel="noopener noreferrer">对比实验室 ↗</a></nav></header>
+  <header class="topbar"><a class="brand" href="/" aria-label="课堂实时翻译矫正首页"><span class="brand-mark">译</span><div><strong>课堂实时翻译矫正</strong><small>英语 → 中文</small></div></a><nav aria-label="其他功能"><a href="/compare#profiles" target="_blank" rel="noopener noreferrer">API 配置</a><a class="secondary-link" href="/compare" target="_blank" rel="noopener noreferrer">对比实验室 ↗</a></nav></header>
 
   <section class="control-panel" aria-label="字幕控制">
     <div class="main-controls">
@@ -23,11 +23,11 @@
 
   <div id="notice" class="notice" role="status" hidden></div>
   <section id="caption-panel" class="caption-panel" aria-label="实时双语字幕">
-    <header class="caption-toolbar"><div class="session-status" role="status"><span id="status-dot" class="status-dot"></span><div><strong id="status-text">准备就绪</strong><span id="status-detail">选择模型与声音来源，即可开始。</span></div></div><div class="caption-tools"><span id="timer" class="timer">00:00</span><select id="display-language" aria-label="字幕显示语言"><option value="bilingual">英中双语</option><option value="chinese">仅中文</option></select><label class="autoscroll-label"><input id="autoscroll" type="checkbox" checked> 自动滚动</label><button id="font-down" class="icon-button" type="button" title="缩小字幕" aria-label="缩小字幕">A−</button><button id="font-up" class="icon-button" type="button" title="放大字幕" aria-label="放大字幕">A+</button><button id="export-button" class="button secondary small" type="button" disabled>导出 TXT</button><button id="clear-button" class="button secondary small clear-button" type="button" title="清空本页字幕与上下文，保留 API 和课程设置" disabled>清除本页</button></div></header>
+    <header class="caption-toolbar"><div class="session-status" role="status"><span id="status-dot" class="status-dot"></span><div><strong id="status-text">准备就绪</strong><span id="status-detail">选择模型与声音来源，即可开始。</span></div></div><div class="caption-tools"><span id="timer" class="timer">00:00</span><select id="display-language" aria-label="字幕显示语言"><option value="bilingual">英中双语</option><option value="chinese">仅中文</option></select><label class="autoscroll-label"><input id="autoscroll" type="checkbox" checked> 自动滚动</label><button id="font-down" class="icon-button" type="button" title="缩小字幕" aria-label="缩小字幕">A−</button><button id="font-up" class="icon-button" type="button" title="放大字幕" aria-label="放大字幕">A+</button><button id="export-button" class="button secondary small" type="button" title="导出上下文整合段落，语言与 AI 校正状态跟随上下文侧栏" disabled>导出 TXT</button><button id="clear-button" class="button secondary small clear-button" type="button" title="清空本页字幕与上下文，保留 API 和课程设置" disabled>清除本页</button></div></header>
     <div id="transcript" class="transcript" tabindex="0" aria-label="连续课堂字幕"><div id="empty-state" class="empty-state"><div class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><h1>把注意力留给课堂。</h1><p>英文分句显示，中文译文随后跟上。<br>点击上方开始，或先查看已有测试记录。</p><button id="preview-button" class="button secondary" type="button">查看历史字幕预览</button><small>预览不采集声音，不调用 API</small></div><div id="caption-list"></div></div>
-    <footer class="caption-footer"><span id="sentence-count">0 句字幕</span><span id="mode-note">暂停后可继续这堂课，已有字幕保留。</span><span id="export-status" role="status" aria-live="polite">点击结束后自动导出 TXT</span><button id="scroll-bottom" class="text-button" type="button" hidden>回到最新字幕 ↓</button></footer>
+    <footer class="caption-footer"><span id="sentence-count">0 句字幕</span><span id="mode-note">暂停后可继续这堂课，已有字幕保留。</span><span id="export-status" role="status" aria-live="polite">点击结束后自动导出上下文 TXT</span><button id="scroll-bottom" class="text-button" type="button" hidden>回到最新字幕 ↓</button></footer>
   </section>
-  <footer class="page-footer"><span>暂停后可继续；点击结束后自动导出 TXT 至“下载/课堂字幕”。字幕草稿持续保存。</span><span>实时转录，逐句翻译 · 本机工作台</span></footer>
+  <footer class="page-footer"><span>暂停后可继续；点击结束后自动导出上下文 TXT 至“下载/课堂字幕”。字幕草稿持续保存。</span><span>实时转录，逐句翻译 · 本机工作台</span></footer>
 </main>
 </body>
 </html>
