@@ -7,13 +7,13 @@ const source = readFileSync(new URL('./public/live.js', import.meta.url), 'utf8'
 const registrationStart = source.indexOf("ui['start-button'].addEventListener");
 assert.ok(registrationStart > 0, 'The live client event-registration boundary must exist.');
 const clientFunctions = source.slice(0, registrationStart);
-const contextHeading = '=== 上下文（含已完成 AI 校正） ===';
+const contextHeading = '课堂上下文整合文本';
 
 async function flushPromises() {
   for (let index = 0; index < 10; index++) await Promise.resolve();
 }
 
-function createHarness(t, snapshot = () => ({ text: '', hasCorrections: false })) {
+function createHarness(t, snapshot = () => null) {
   let time = 0, nextTimerId = 0, nextBlobId = 0, snapshotCalls = 0;
   const timers = new Map(), elements = new Map(), blobs = new Map();
   const requests = [], downloads = [], socketMessages = [];
@@ -132,9 +132,11 @@ function createHarness(t, snapshot = () => ({ text: '', hasCorrections: false })
     get snapshotCalls() { return snapshotCalls; } };
 }
 
-test('finishing exports the last translation, page history and completed corrections exactly once', async t => {
-  const harness = createHarness(t, () => ({ text: 'Context session\nContext English.\n已完成的校正译文。', hasCorrections: true }));
+test('manual and automatic exports use context paragraphs and completed corrections without duplicate raw captions', async t => {
+  let finalRow;
+  const harness = createHarness(t, () => ({ text: `Context session\nEarlier English sentence.\n此前原译文。\n\n${finalRow.source}\n已完成的校正译文。`, hasCorrections: true, language: 'bilingual' }));
   const { run, row } = harness.runFixture({ target: '', history: true });
+  finalRow = row;
   await harness.api.stopRun(run, { flush: false });
   assert.equal(harness.requests.length, 0, 'Stopping must wait for final translations before exporting.');
   assert.equal(JSON.parse(harness.socketMessages[0]).type, 'stop');
@@ -150,18 +152,21 @@ test('finishing exports the last translation, page history and completed correct
   assert.ok(request.body.text.includes('Earlier English sentence.'));
   assert.ok(request.body.text.includes('此前原译文。'));
   assert.ok(request.body.text.includes(row.source));
-  assert.ok(request.body.text.includes(row.target));
+  assert.equal(request.body.text.includes(row.target), false, 'The corrected paragraph replaces the original translation in the export.');
   assert.ok(request.body.text.includes(contextHeading));
   assert.ok(request.body.text.includes('已完成的校正译文。'));
+  assert.equal(request.body.text.includes('[00:04]'), false, 'Per-sentence timestamps must not split context paragraphs.');
+  assert.equal(request.body.text.split(row.source).length - 1, 1);
   assert.equal(harness.snapshotCalls, 1);
   await harness.saveSuccessfully(request);
   assert.equal(harness.downloads.length, 0);
 
   harness.api.exportCaptions();
   const manualText = await harness.downloads[0].blob.text();
-  assert.ok(manualText.includes(row.target));
-  assert.equal(manualText.includes(contextHeading), false, 'Manual export keeps the original bilingual captions.');
-  assert.equal(harness.snapshotCalls, 1);
+  assert.ok(manualText.includes('已完成的校正译文。'));
+  assert.equal(manualText.includes(row.target), false);
+  assert.ok(manualText.includes(contextHeading));
+  assert.equal(harness.snapshotCalls, 2, 'Both export entry points take a fresh context snapshot.');
 });
 
 test('an empty current run does not export old history', async t => {
@@ -176,14 +181,16 @@ test('an empty current run does not export old history', async t => {
   assert.equal(harness.snapshotCalls, 0);
 });
 
-test('a pending save releases the run immediately and a disabled correction snapshot adds no work or appendix', async t => {
-  const harness = createHarness(t, () => ({ text: '', hasCorrections: false }));
+test('a pending save releases the run immediately and exports context when AI correction is disabled', async t => {
+  const harness = createHarness(t, () => ({ text: 'Current English sentence.\n\n当前原译文。', hasCorrections: false, language: 'bilingual' }));
   const { run } = harness.runFixture();
   harness.api.finishRun(run);
   assert.equal(harness.api.state.run, null);
   assert.equal(harness.requests.length, 1, 'Saving starts synchronously without waiting for correction work.');
   assert.equal(harness.snapshotCalls, 1);
-  assert.equal(harness.requests[0].body.text.includes(contextHeading), false);
+  assert.ok(harness.requests[0].body.text.includes(contextHeading));
+  assert.ok(harness.requests[0].body.text.includes('当前原译文。'));
+  assert.equal(harness.requests[0].body.text.includes('AI 校正译文'), false);
   const nextRun = { id: 'next-run', queue: [] };
   harness.api.state.run = nextRun;
   await harness.advance(7000);
@@ -194,7 +201,7 @@ test('a pending save releases the run immediately and a disabled correction snap
   assert.equal(harness.downloads.length, 0);
 });
 
-test('snapshot errors retain original captions and a failed local save falls back to one TXT download', async t => {
+test('snapshot errors still integrate finalized text and a failed local save downloads the captured paragraphs once', async t => {
   const harness = createHarness(t, () => { throw new Error('Mock sidebar failure.'); });
   const { run, row } = harness.runFixture();
   harness.api.finishRun(run);
@@ -202,7 +209,8 @@ test('snapshot errors retain original captions and a failed local save falls bac
   const request = harness.requests[0];
   assert.ok(request.body.text.includes(row.source));
   assert.ok(request.body.text.includes(row.target));
-  assert.equal(request.body.text.includes(contextHeading), false);
+  assert.ok(request.body.text.includes(contextHeading));
+  assert.equal(request.body.text.includes('[00:04]'), false);
   request.resolve({ ok: false, json: async () => ({ saved: false }) });
   await flushPromises();
   assert.equal(harness.downloads.length, 1);
@@ -333,4 +341,48 @@ test('explicitly ending an empty paused connection still exports all earlier pag
   const request = harness.requests[0]; assert.equal(request.body.runId, run.id);
   assert.ok(request.body.text.includes('Earlier English sentence.')); assert.ok(request.body.text.includes('此前原译文。'));
   await harness.saveSuccessfully(request); await harness.api.endSession(); assert.equal(harness.requests.length, 1);
+});
+
+test('both export paths follow a Chinese-only context selection instead of appending raw English', async t => {
+  const harness = createHarness(t, () => ({ text: '课堂段落\n\n利率上升时，债券价格通常下跌。', hasCorrections: false, language: 'chinese' }));
+  const { run } = harness.runFixture({ source: 'Raw English must not appear.', target: '逐句原译文也不应重复。' });
+  harness.api.exportCaptions();
+  const manual = await harness.downloads[0].blob.text();
+  harness.api.finishRun(run);
+  assert.equal(harness.requests.length, 1);
+  for (const text of [manual, harness.requests[0].body.text]) {
+    assert.ok(text.includes('导出语言：仅中文'));
+    assert.ok(text.includes('利率上升时，债券价格通常下跌。'));
+    assert.equal(text.includes('Raw English'), false);
+    assert.equal(text.includes('逐句原译文'), false);
+  }
+  await harness.saveSuccessfully(harness.requests[0]);
+});
+
+test('an empty selected-language context creates no misleading header-only or raw-caption export', async t => {
+  const harness = createHarness(t, () => ({ text: '', hasCorrections: false, language: 'chinese' }));
+  const { run } = harness.runFixture({ target: '' });
+  harness.api.exportCaptions(); harness.api.finishRun(run);
+  assert.equal(harness.downloads.length, 0);
+  assert.equal(harness.requests.length, 0);
+});
+
+test('unfinalized speech is excluded from context exports even when the sidebar is unavailable', async t => {
+  const harness = createHarness(t);
+  const { run, row } = harness.runFixture(); row.final = false;
+  harness.api.exportCaptions(); harness.api.finishRun(run);
+  assert.equal(harness.downloads.length, 0); assert.equal(harness.requests.length, 0);
+});
+
+test('sidebar failure fallback keeps finalized sentences together and excludes the partial tail', async t => {
+  const harness = createHarness(t, () => { throw new Error('Sidebar unavailable.'); });
+  const { run } = harness.runFixture({ source: 'First sentence.', target: '第一句。' });
+  run.session.rows.push({ source: 'Second sentence.', target: '第二句。', final: true },
+    { source: 'Unfinished tail', target: '', final: false });
+  harness.api.exportCaptions();
+  const text = await harness.downloads[0].blob.text();
+  assert.ok(text.includes('First sentence. Second sentence.'));
+  assert.ok(text.includes('第一句。 第二句。'));
+  assert.equal(text.includes('Unfinished tail'), false);
+  assert.equal(text.includes('[00:04]'), false);
 });
